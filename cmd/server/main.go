@@ -9,20 +9,14 @@ import (
 )
 
 func main() {
-
+	// Загружаем конфигурацию
 	cfg, err := config.LoadConfig("config.yaml")
 	if err != nil {
 		log.Fatalf("Ошибка при загрузке конфигурации: %v", err)
 	}
 
-	// Регистрируем обработчик и передаем токен с помощью замыкания
-	http.HandleFunc("/send-message", func(w http.ResponseWriter, r *http.Request) {
-		api.SendMessageHandler(
-			w,
-			r,
-			cfg.Telegram.Token,
-		)
-	})
+	// Регистрируем обработчик с токеном через замыкание
+	http.HandleFunc("/send-message", api.SendMessageHandler(cfg.Telegram.Token))
 
 	// Запускаем HTTP-сервер на указанном порту
 	port := "8080"
